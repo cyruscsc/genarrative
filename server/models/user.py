@@ -6,18 +6,25 @@ from uuid import UUID
 
 class UserBase(BaseModel):
     email: str
-    display_name: str | None = None
 
 
 class UserAuth(UserBase):
     password: str
 
 
-class UserRes(UserBase):
+class UserProfile(BaseModel):
     id: UUID
+    display_name: str | None = None
+    color_mode: str
+    temperature: float
+    max_words: int
     status: Status
     created_at: datetime
     updated_at: datetime
+
+
+class UserRes(UserBase, UserProfile):
+    pass
 
 
 class UserSession(BaseModel):
