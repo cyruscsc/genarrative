@@ -9,8 +9,8 @@ def get_jwt_tokens(request: Request):
 
 
 def set_jwt_tokens(response: Response, access_token: str, refresh_token: str):
-    response.set_cookie("access_token", access_token, httponly=True)
-    response.set_cookie("refresh_token", refresh_token, httponly=True)
+    response.set_cookie("access_token", access_token, httponly=True, max_age=3600)
+    response.set_cookie("refresh_token", refresh_token, httponly=True, max_age=3600)
     return response
 
 

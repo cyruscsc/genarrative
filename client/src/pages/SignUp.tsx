@@ -1,5 +1,6 @@
 import { AuthCard } from '@/components'
 import { endpoints } from '@/lib/endpoints'
+import { routes } from '@/lib/routes'
 
 const cardDetails = {
   type: 'sign-up' as 'sign-up',
@@ -7,6 +8,7 @@ const cardDetails = {
   description: 'Create an account to get started',
   buttonText: 'Sign Up',
   endpoint: endpoints.signUp,
+  redirect: routes.dashboard,
 }
 
 const SignUp = () => {

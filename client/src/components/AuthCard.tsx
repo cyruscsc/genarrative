@@ -20,6 +20,10 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
+import { useUserStore } from '@/lib/user-store'
+import { ServerError, User } from '@/lib/types'
+import { routes } from '@/lib/routes'
+import { useNavigate } from 'react-router-dom'
 
 interface AuthCardProps {
   type: 'sign-up' | 'sign-in'
@@ -27,6 +31,7 @@ interface AuthCardProps {
   description: string
   buttonText: string
   endpoint: string
+  redirect: string
 }
 
 const formSchema = z.object({
@@ -49,6 +54,8 @@ const AuthCard = (props: AuthCardProps) => {
       password: '',
     },
   })
+  const { setUser } = useUserStore((state) => state)
+  const navigate = useNavigate()
 
   const submitForm = async (values: FormValues) => {
     try {
@@ -60,10 +67,13 @@ const AuthCard = (props: AuthCardProps) => {
         credentials: 'include',
         body: JSON.stringify(values),
       })
-      const data = await response.json()
       if (response.ok) {
+        const data: User = await response.json()
+        setUser(data as User)
         toast.success('Success')
+        navigate(props.redirect)
       } else {
+        const data: ServerError = await response.json()
         toast.error(data.detail)
       }
     } catch (error) {
@@ -111,7 +121,23 @@ const AuthCard = (props: AuthCardProps) => {
               )}
             />
           </CardContent>
-          <CardFooter className='justify-end'>
+          <CardFooter className='flex justify-between'>
+            {props.type === 'sign-up' && (
+              <small className='text-sm text-muted-foreground leading-none'>
+                Have an account?{' '}
+                <a href={routes.signIn} className='underline'>
+                  Sign in
+                </a>
+              </small>
+            )}
+            {props.type === 'sign-in' && (
+              <small className='text-sm text-muted-foreground leading-none'>
+                New to Genarrative?{' '}
+                <a href={routes.signUp} className='underline'>
+                  Sign up
+                </a>
+              </small>
+            )}
             <Button type='submit'>{props.buttonText}</Button>
           </CardFooter>
         </form>
