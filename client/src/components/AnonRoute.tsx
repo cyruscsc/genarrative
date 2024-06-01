@@ -4,7 +4,11 @@ import { Navigate, Outlet } from 'react-router-dom'
 
 const AnonRoute = () => {
   const { user } = useUserStore((state) => state)
-  return user ? <Navigate to={routes.dashboard} replace /> : <Outlet />
+  return user ? (
+    <Navigate to={routes.dashboard.playground} replace />
+  ) : (
+    <Outlet />
+  )
 }
 
 export default AnonRoute

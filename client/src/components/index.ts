@@ -1,3 +1,6 @@
 export { default as AuthCard } from './AuthCard'
 export { default as AuthRoute } from './AuthRoute'
 export { default as AnonRoute } from './AnonRoute'
+export { default as Header } from './Header'
+export { default as SideBar } from './SideBar'
+export { default as SideBarItem } from './SideBarItem'
