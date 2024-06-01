@@ -23,7 +23,6 @@ import { toast } from 'sonner'
 import { useUserStore } from '@/lib/user-store'
 import { ServerError, User } from '@/lib/types'
 import { routes } from '@/lib/routes'
-import { useNavigate } from 'react-router-dom'
 
 interface AuthCardProps {
   type: 'sign-up' | 'sign-in'
@@ -31,7 +30,6 @@ interface AuthCardProps {
   description: string
   buttonText: string
   endpoint: string
-  redirect: string
 }
 
 const formSchema = z.object({
@@ -55,7 +53,6 @@ const AuthCard = (props: AuthCardProps) => {
     },
   })
   const { setUser } = useUserStore((state) => state)
-  const navigate = useNavigate()
 
   const submitForm = async (values: FormValues) => {
     try {
@@ -71,7 +68,7 @@ const AuthCard = (props: AuthCardProps) => {
         const data: User = await response.json()
         setUser(data as User)
         toast.success('Success')
-        navigate(props.redirect)
+        console.log(data)
       } else {
         const data: ServerError = await response.json()
         toast.error(data.detail)

@@ -15,6 +15,7 @@ class UserAuth(UserBase):
 class UserProfile(BaseModel):
     id: UUID
     display_name: str | None = None
+    tier: str
     color_mode: str
     temperature: float
     max_words: int

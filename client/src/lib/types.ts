@@ -2,6 +2,7 @@ export interface User {
   id: string
   email: string
   display_name: string
+  tier: string
   color_mode: 'light' | 'dark'
   temperature: number
   max_words: number
