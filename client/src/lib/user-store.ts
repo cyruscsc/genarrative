@@ -2,18 +2,23 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { User } from './types'
 
-interface UserStore {
+type State = {
   user: User | null
+}
+
+type Actions = {
   setUser: (user: User) => void
   clearUser: () => void
 }
 
-export const useUserStore = create<UserStore>()(
+const initialState: State = { user: null }
+
+export const useUserStore = create<State & Actions>()(
   persist(
     (set) => ({
-      user: null,
+      ...initialState,
       setUser: (user) => set({ user }),
-      clearUser: () => set({ user: null }),
+      clearUser: () => set(initialState),
     }),
     {
       name: 'user-storage',

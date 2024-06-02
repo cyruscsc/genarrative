@@ -4,7 +4,7 @@ import { Navigate, Outlet } from 'react-router-dom'
 
 const AuthRoute = () => {
   const { user } = useUserStore((state) => state)
-  return user ? <Outlet /> : <Navigate to={routes.signIn} replace />
+  return user ? <Outlet /> : <Navigate to={routes.signIn} />
 }
 
 export default AuthRoute

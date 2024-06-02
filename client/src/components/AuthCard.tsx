@@ -68,7 +68,6 @@ const AuthCard = (props: AuthCardProps) => {
         const data: User = await response.json()
         setUser(data as User)
         toast.success('Success')
-        console.log(data)
       } else {
         const data: ServerError = await response.json()
         toast.error(data.detail)

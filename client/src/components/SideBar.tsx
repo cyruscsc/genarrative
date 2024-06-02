@@ -4,13 +4,12 @@ import {
   LifeBuoy,
   Settings2,
   SquareTerminal,
-  SquareUser,
   Triangle,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { routes } from '@/lib/routes'
-import { SideBarItem } from '@/components'
+import { SideBarItem, ProfileModal } from '@/components'
 
 const SideBar = () => {
   return (
@@ -46,9 +45,7 @@ const SideBar = () => {
         <SideBarItem label='Help'>
           <LifeBuoy className='size-5' />
         </SideBarItem>
-        <SideBarItem label='Account'>
-          <SquareUser className='size-5' />
-        </SideBarItem>
+        <ProfileModal />
       </nav>
     </aside>
   )
