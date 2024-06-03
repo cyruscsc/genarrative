@@ -66,6 +66,7 @@ const ProfileModal = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(values),
       })
       if (response.ok) {
@@ -205,7 +206,7 @@ const ProfileModal = () => {
               )}
             />
             <DialogFooter className='flex sm:justify-between gap-2'>
-              <Button variant='ghost' onClick={signOut}>
+              <Button type='button' variant='ghost' onClick={signOut}>
                 Sign out
               </Button>
               <Button type='submit'>Save</Button>

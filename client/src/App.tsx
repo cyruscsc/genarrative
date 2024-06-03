@@ -11,8 +11,42 @@ import {
 } from '@/pages'
 import { AnonRoute, AuthRoute } from './components'
 import { routes } from './lib/routes'
+import { useUserStore } from './lib/user-store'
+import { useEffect } from 'react'
+import { endpoints } from './lib/endpoints'
+import { ServerError, User } from './lib/types'
+import { toast } from 'sonner'
 
 function App() {
+  const { user, setUser, clearUser } = useUserStore((state) => state)
+
+  const fetchUser = async (id: string) => {
+    try {
+      const response = await fetch(`${endpoints.user}/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      })
+      if (response.ok) {
+        const data: User = await response.json()
+        setUser(data)
+      } else {
+        const data: ServerError = await response.json()
+        toast.error(data.detail)
+        clearUser()
+      }
+    } catch (error) {
+      toast.error('Something went wrong')
+      clearUser()
+    }
+  }
+
+  useEffect(() => {
+    user?.id && fetchUser(user.id)
+  }, [])
+
   return (
     <Routes>
       <Route path={routes.home} element={<Home />} />

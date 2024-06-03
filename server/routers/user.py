@@ -7,6 +7,22 @@ from uuid import UUID
 router = APIRouter()
 
 
+@router.get("/{id}", response_model=UserRes)
+def get_profile(
+    id: UUID,
+    supa_session: UserSession | None = Depends(session.get_supa_session),
+) -> UserRes:
+    if not supa_session:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    if supa_session.id != id:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    try:
+        supa_user = users.get_profile(id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return UserRes(email=supa_session.email, **supa_user.model_dump())
+
+
 @router.put("/{id}", response_model=UserRes)
 def set_profile(
     id: UUID,
