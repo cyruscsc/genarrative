@@ -61,7 +61,7 @@ const ProfileModal = () => {
 
   const submitForm = async (values: FormValues) => {
     try {
-      const response = await fetch(`${endpoints.user}/${user?.id}`, {
+      const response = await fetch(endpoints.user, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

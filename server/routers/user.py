@@ -1,40 +1,29 @@
 from deps import session
 from fastapi import APIRouter, Depends, HTTPException
 from models.user import UserReq, UserRes, UserSession
-from supa import users
-from uuid import UUID
+from supa import user
 
 router = APIRouter()
 
 
-@router.get("/{id}", response_model=UserRes)
-def get_profile(
-    id: UUID,
-    supa_session: UserSession | None = Depends(session.get_supa_session),
+@router.get("", response_model=UserRes)
+async def retrieve_profile(
+    supa_session: UserSession = Depends(session.verify_session),
 ) -> UserRes:
-    if not supa_session:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-    if supa_session.id != id:
-        raise HTTPException(status_code=403, detail="Forbidden")
     try:
-        supa_user = users.get_profile(id)
+        supa_user = user.get_profile(supa_session.id)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return UserRes(email=supa_session.email, **supa_user.model_dump())
 
 
-@router.put("/{id}", response_model=UserRes)
-def set_profile(
-    id: UUID,
+@router.put("", response_model=UserRes)
+async def update_profile(
     profile: UserReq,
-    supa_session: UserSession | None = Depends(session.get_supa_session),
+    supa_session: UserSession = Depends(session.verify_session),
 ) -> UserRes:
-    if not supa_session:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-    if supa_session.id != id:
-        raise HTTPException(status_code=403, detail="Forbidden")
     try:
-        supa_tier = users.get_user_tier(id)
+        supa_tier = user.get_user_tier(supa_session.id)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     if profile.temperature < 0.5 or profile.temperature > 1.0:
@@ -47,7 +36,7 @@ def set_profile(
             detail=f"Max words must be between 1 and {supa_tier.word_limit}",
         )
     try:
-        supa_user = users.set_profile(id, profile)
+        supa_user = user.set_profile(supa_session.id, profile)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return UserRes(email=supa_session.email, **supa_user.model_dump())

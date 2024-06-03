@@ -18,11 +18,11 @@ import { ServerError, User } from './lib/types'
 import { toast } from 'sonner'
 
 function App() {
-  const { user, setUser, clearUser } = useUserStore((state) => state)
+  const { setUser, clearUser } = useUserStore((state) => state)
 
-  const fetchUser = async (id: string) => {
+  const fetchUser = async () => {
     try {
-      const response = await fetch(`${endpoints.user}/${id}`, {
+      const response = await fetch(endpoints.user, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -33,8 +33,6 @@ function App() {
         const data: User = await response.json()
         setUser(data)
       } else {
-        const data: ServerError = await response.json()
-        toast.error(data.detail)
         clearUser()
       }
     } catch (error) {
@@ -44,7 +42,7 @@ function App() {
   }
 
   useEffect(() => {
-    user?.id && fetchUser(user.id)
+    fetchUser()
   }, [])
 
   return (
