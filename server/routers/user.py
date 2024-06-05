@@ -1,27 +1,27 @@
 from deps import session
 from fastapi import APIRouter, Depends, HTTPException
-from models.user import UserReq, UserRes, UserSession
+from models.user import ProfileToDB, UserOutput, UserSession
 from supa import user
 
 router = APIRouter()
 
 
-@router.get("", response_model=UserRes)
+@router.get("", response_model=UserOutput)
 async def retrieve_profile(
     supa_session: UserSession = Depends(session.verify_session),
-) -> UserRes:
+) -> UserOutput:
     try:
         supa_user = user.get_profile(supa_session.id)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    return UserRes(email=supa_session.email, **supa_user.model_dump())
+    return UserOutput(email=supa_session.email, **supa_user.model_dump())
 
 
-@router.put("", response_model=UserRes)
+@router.put("", response_model=UserOutput)
 async def update_profile(
-    profile: UserReq,
+    profile: ProfileToDB,
     supa_session: UserSession = Depends(session.verify_session),
-) -> UserRes:
+) -> UserOutput:
     try:
         supa_tier = user.get_user_tier(supa_session.id)
     except Exception as e:
@@ -39,4 +39,4 @@ async def update_profile(
         supa_user = user.set_profile(supa_session.id, profile)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    return UserRes(email=supa_session.email, **supa_user.model_dump())
+    return UserOutput(email=supa_session.email, **supa_user.model_dump())

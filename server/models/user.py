@@ -1,5 +1,4 @@
-from datetime import datetime
-from models.types import ColorMode, Status
+from models.common import ColorMode, TableProps
 from pydantic import BaseModel
 from uuid import UUID
 
@@ -12,22 +11,19 @@ class UserAuth(UserBase):
     password: str
 
 
-class UserReq(BaseModel):
+class ProfileToDB(BaseModel):
     display_name: str | None = None
     color_mode: ColorMode
     temperature: float
     max_words: int
 
 
-class UserProfile(UserReq):
+class ProfileFromDB(ProfileToDB, TableProps):
     id: UUID
     tier: str
-    status: Status
-    created_at: datetime
-    updated_at: datetime
 
 
-class UserRes(UserBase, UserProfile):
+class UserOutput(UserBase, ProfileFromDB):
     pass
 
 

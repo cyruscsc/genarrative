@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum
 
 
@@ -9,3 +10,9 @@ class Status(str, Enum):
 class ColorMode(str, Enum):
     light = "light"
     dark = "dark"
+
+
+class TableProps:
+    status: Status
+    created_at: datetime
+    updated_at: datetime

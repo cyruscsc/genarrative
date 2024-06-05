@@ -1,26 +1,26 @@
-from models.tier import TierBase
-from models.user import UserProfile, UserReq
+from models.tier import TierFromDB
+from models.user import ProfileFromDB, ProfileToDB
 from supa import supa
 from uuid import UUID
 
 
-def get_user_tier(id: UUID) -> TierBase:
+def get_user_tier(id: UUID) -> TierFromDB:
     supa_tier = (
         supa.from_("user_tiers")
-        .select("tiers(id, name, word_limit, token_limit, prompt_limit)")
+        .select("tiers(*)")
         .eq("user_id", str(id))
         .execute()
         .data[0]["tiers"]
     )
-    return TierBase(**supa_tier)
+    return TierFromDB(**supa_tier)
 
 
-def get_profile(id: UUID) -> UserProfile:
+def get_profile(id: UUID) -> ProfileFromDB:
     supa_user = supa.from_("profiles").select("*").eq("id", str(id)).execute().data[0]
-    return UserProfile(**supa_user, tier=get_user_tier(id).name)
+    return ProfileFromDB(**supa_user, tier=get_user_tier(id).name)
 
 
-def set_profile(id: UUID, profile: UserReq) -> UserProfile:
+def set_profile(id: UUID, profile: ProfileToDB) -> ProfileFromDB:
     supa_user = (
         supa.from_("profiles")
         .update(profile.model_dump())
@@ -28,4 +28,4 @@ def set_profile(id: UUID, profile: UserReq) -> UserProfile:
         .execute()
         .data[0]
     )
-    return UserProfile(**supa_user, tier=get_user_tier(id).name)
+    return ProfileFromDB(**supa_user, tier=get_user_tier(id).name)

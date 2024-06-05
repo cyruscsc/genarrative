@@ -1,5 +1,4 @@
-from datetime import datetime
-from models.types import Status
+from models.common import TableProps
 from pydantic import BaseModel
 
 
@@ -11,8 +10,5 @@ class TierBase(BaseModel):
     prompt_limit: int
 
 
-class TierDetail(TierBase):
+class TierFromDB(TierBase, TableProps):
     price: float
-    status: Status
-    created_at: datetime
-    updated_at: datetime

@@ -1,5 +1,4 @@
-from datetime import datetime
-from models.types import Status
+from models.common import TableProps
 from pydantic import BaseModel
 from uuid import UUID
 
@@ -9,9 +8,13 @@ class LabelBase(BaseModel):
     note: str | None = None
 
 
-class LabelDetail(LabelBase):
-    id: UUID
+class LabelInput(LabelBase):
+    pass
+
+
+class LabelToDB(LabelBase):
     user_id: UUID
-    status: Status
-    created_at: datetime
-    updated_at: datetime
+
+
+class LabelFromDB(LabelBase, TableProps):
+    id: UUID
